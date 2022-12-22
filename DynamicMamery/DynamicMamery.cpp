@@ -13,32 +13,34 @@ using std::endl;
 //#define Dynamic_mamory_1
 #define Dynamic_mamory_2
 
-void FillRand(int* arr, const int n,const int minrand,const int maxreand);
-void Print(int* arr, const int n);
+void FillRand(int arr[], const int n,const int minrand,const int maxreand);
+void FillRand(double arr[], const int n, const int minrand, const int maxreand);
+
+template<typename T>void Print(T* arr, const int n);
 
 void FillRand(int**arr, const int rows, const int cols);
-void Print(int**arr, const int rows, const int cols);
+void FillRand(double** arr, const int rows, const int cols);
 
-int* push_back(int* arr,int& n, int value);
-int* push_front(int* arr, int& n, int value);
-
-int* insert(int* mas, int& n, int value, int index);
-int* pop_back(int* mas, int& n);
-int* pop_front(int* mas, int& n);
+template<typename T>void Print(T**arr, const int rows, const int cols);
+template<typename T>T* push_back(T* arr,int& n, int value);
+template<typename T>T* push_front(T* arr, int& n, int value);
+template<typename T>T* insert(T* mas, int& n, T value, int index);
+template<typename T>T* pop_back(T* mas, int& n);
+template<typename T>T* pop_front(T* mas, int& n);
 int* erase(int* mas, int& n, int index);
 bool Proverk_index(int index,int n);
 
-int** pusch_row_back(int** arr, int& rows, const int cols);
+template<typename T>T** pusch_row_back(T** arr, int& rows, const int cols);
 
-int** pusch_row_front(int** arr, int& rows, const int cols);
-int** insert_row(int** arr, int& rows, const int cols, int index);
-int** pop_row_back(int** arr, int& rows, const int cols);
-int** pop_row_front(int** arr, int& rows, const int cols);
-int** erase_row(int** arr, int& rows, const int cols, int index);
-int** alocale(const int rows, const int cols);
-void clear(int** arr, const int rows);
+template<typename T>T** pusch_row_front(T** arr, int& rows, const int cols);
+template<typename T>T** insert_row(T** arr, int& rows, const int cols, int index);
+template<typename T>T** pop_row_back(T** arr, int& rows, const int cols);
+template<typename T>T** pop_row_front(T** arr, int& rows, const int cols);
+template<typename T>T** erase_row(T** arr, int& rows, const int cols, int index);
+template<typename T>T** alocale(const int rows, const int cols);
+template<typename T>void clear(T** arr, const int rows);
 
-void pusch_col_back(int**, const int rows, int& cols);
+template<typename T>void pusch_col_back(T**, const int rows, int& cols);
 int main()
 {
     setlocale(LC_ALL, "RUS");
@@ -167,7 +169,7 @@ int main()
     int cols;//кол-во столбцов(кол-во эллементов строки
     cout << "Введите кол-во строк "; cin >> rows;
     cout << "Введите кол-во эллементов строки "; cin >> cols;
-    int** arr1 = alocale(rows, cols);
+    double** arr1 = alocale<double>(rows, cols);
     
 
     FillRand(arr1, rows, cols);
@@ -183,7 +185,7 @@ int main()
     arr1 = pusch_row_front(arr1, rows, cols);
     Print(arr1, rows, cols);
     cout << delimiter << endl;
-   /* cout << "Введите индекс куда вставить строку " << endl;
+    cout << "Введите индекс куда вставить строку " << endl;
     int index; cin >> index;
     arr1 = insert_row(arr1, rows, cols,index);
     Print(arr1, rows, cols);
@@ -199,7 +201,7 @@ int main()
     cout << "Введите индекс какую строку удалить строку " << endl;
      cin >> index;
     arr1 = erase_row(arr1, rows, cols,index);
-    Print(arr1, rows, cols);*/
+    Print(arr1, rows, cols);
     cout <<"pusch cool" delimiter << endl;
     pusch_col_back(arr1, rows, cols);
     Print(arr1, rows, cols);
@@ -229,7 +231,27 @@ void FillRand(int**arr, const int rows, const int cols)
 
     }
 }
-void Print(int**arr, const int rows, const int cols)
+void FillRand(double** arr, const int rows, const int cols)
+{
+    for (int i = 0; i < rows; i++)//i нумироет строки
+    {
+        for (int j = 0; j < cols; j++)//j нумирует эллементы строки
+        {
+            arr[i][j] = rand() % 100*1.1;
+        }
+
+    }
+}
+void FillRand(double arr[], const int n, const int minrand, const int maxreand)
+{
+    cout << typeid(arr).name() << endl;
+
+    for (int i = 0; i < n; i++)
+    {
+        *(arr + i) = rand() % (maxreand - minrand) + minrand*1.1;
+    }
+}
+template<typename T>void Print(T**arr, const int rows, const int cols)
 {
     for (int i = 0; i < rows; i++)//i нумироет строки
     {
@@ -241,7 +263,7 @@ void Print(int**arr, const int rows, const int cols)
 
     }
 }
-void Print(int arr[], const int n)
+template<typename T>void Print(T arr[], const int n)
 {
     cout << typeid(arr).name() << endl;
     for (int i = 0; i < n; i++)
@@ -252,9 +274,9 @@ void Print(int arr[], const int n)
     }
     cout << endl;
 }
-int* push_back(int* arr,int& n, int value)
+template<typename T>T* push_back(T* arr,int& n, T value)
 {
-    int* bufer = new int[n + 1];
+    T* bufer = new T[n + 1];
     for (int i = 0; i < n; i++)
     {
         bufer[i] = arr[i];
@@ -267,9 +289,9 @@ int* push_back(int* arr,int& n, int value)
     return arr;
 
 }
-int* push_front(int* arr, int& n, int value)
+template<typename T>T* push_front(T* arr, int& n, T value)
 {
-    int* bufer = new int[n + 1];
+    T* bufer = new T[n + 1];
     for (int i = 0; i < n; i++)
     {
         bufer[i + 1] = arr[i];
@@ -281,9 +303,9 @@ int* push_front(int* arr, int& n, int value)
     return arr;
 }
 
-int* insert(int* mas, int& n, int value, int index)
+template<typename T>T* insert(T* mas, int& n, T value, int index)
 {
-    int* bufer = new int[n + 1];
+    T* bufer = new T[n + 1];
     for (int i = 0,k=0; i < n; i++,k++)
     {
         if (i == index&&i==k)
@@ -300,9 +322,9 @@ int* insert(int* mas, int& n, int value, int index)
 
     return mas;
 }
-int* pop_back(int* mas, int& n)
+template<typename T>T* pop_back(T* mas, int& n)
 {
-    int* bufer = new int[n - 1];
+    T* bufer = new T[n - 1];
     n--;
     for (int i = 0; i < n; i++)
     {
@@ -313,9 +335,9 @@ int* pop_back(int* mas, int& n)
     return mas;
 
 }
-int* pop_front(int* mas, int& n) 
+template<typename T>T* pop_front(T* mas, int& n)
 {
-    int* bufer = new int[n - 1];
+    T* bufer = new T[n - 1];
 
     for (int i = 1; i < n; i++)
     {
@@ -365,10 +387,10 @@ bool Proverk_index(int index,int n)
     
 }
 
-int** pusch_row_back(int** arr,  int& rows, const int cols)
+template<typename T>T** pusch_row_back(T** arr,  int& rows, const int cols)
 {
 
-    int** bufer = new int* [rows + 1];
+    T** bufer = new T* [rows + 1];
     for (int i = 0; i < rows; i++)
     {
 
@@ -376,13 +398,13 @@ int** pusch_row_back(int** arr,  int& rows, const int cols)
     }
     delete[]arr;
     arr = bufer;
-    bufer[rows] = new int[cols] {};
+    bufer[rows] = new T[cols] {};
     rows++;
     return arr;
 }
-int** pusch_row_front(int** arr, int& rows, const int cols)
+template<typename T>T** pusch_row_front(T** arr, int& rows, const int cols)
 {
-    int** bufer = new int* [rows + 1];
+    T** bufer = new T* [rows + 1];
 
     for (int i = 0; i < rows; i++)
     {
@@ -390,14 +412,14 @@ int** pusch_row_front(int** arr, int& rows, const int cols)
     }
     delete[]arr;
     arr = bufer;
-    bufer[0] = new int[cols] {};
+    bufer[0] = new T[cols] {};
     rows++;
     return arr;
 
 }
-int** insert_row(int** arr, int& rows, const int cols,int index)
+template<typename T>T** insert_row(T** arr, int& rows, const int cols,int index)
 {
-    int** bufer = new int* [rows + 1];
+    T** bufer = new T* [rows + 1];
     for (int i = 0, k = 0; i < rows; i++, k++)
     {
         if (i == index && i == k)
@@ -410,14 +432,14 @@ int** insert_row(int** arr, int& rows, const int cols,int index)
     
     delete[]arr;
     arr = bufer;
-    bufer[index] = new int[cols] {};
+    bufer[index] = new T[cols] {};
     rows++;
     return arr;
 }
-int** pop_row_back(int** arr, int& rows, const int cols)
+template<typename T>T** pop_row_back(T** arr, int& rows, const int cols)
 {
     
-    int** bufer = new int* [rows-1];
+    T** bufer = new T* [rows-1];
     for (int i = 0; i < rows-1; i++)
     {
         bufer[i] = arr[i];
@@ -429,9 +451,9 @@ int** pop_row_back(int** arr, int& rows, const int cols)
 
     return arr;
 }
-int** pop_row_front(int** arr, int& rows, const int cols)
+template<typename T>T** pop_row_front(T** arr, int& rows, const int cols)
 {
-    int** bufer = new int* [rows - 1];
+    T** bufer = new T* [rows - 1];
     for (int i = 1; i < rows; i++)
     {
         bufer[i-1] = arr[i];
@@ -446,9 +468,9 @@ int** pop_row_front(int** arr, int& rows, const int cols)
 
 
 }
-int** erase_row(int** arr, int& rows, const int cols, int index)
+template<typename T>T** erase_row(T** arr, int& rows, const int cols, int index)
 {
-    int** bufer = new int* [rows - 1];
+    T** bufer = new T* [rows - 1];
     for (int i = 0,kol=0; i < rows; i++)
     {
 
@@ -476,17 +498,17 @@ int** erase_row(int** arr, int& rows, const int cols, int index)
 
 
 }
-int** alocale(const int rows, const int cols)
+template<typename T>T** alocale(const int rows, const int cols)
 {
-    int** arr1 = new int* [rows];
+    T** arr1 = new T* [rows];
     for (int i = 0; i < rows; i++)
     {
         //создаем строки двумерного массива:
-        arr1[i] = new int[cols];
+        arr1[i] = new T[cols];
     }
     return arr1;
 }
-void clear(int** arr,const int rows)
+template<typename T>void clear(T** arr,const int rows)
 {
     //1)сначало удаляем стороки
     for (int i = 0; i < rows; i++)
@@ -496,11 +518,11 @@ void clear(int** arr,const int rows)
     delete[]arr;//2)потом удаляем сам массив
 }
 
-void pusch_col_back(int**arr, const int rows, int& cols)
+template<typename T>void pusch_col_back(T**arr, const int rows, int& cols)
 {
     for (int i = 0; i < rows; i++)
     {
-        int* bufer = new int[cols + 1]{};
+        T* bufer = new T[cols + 1]{};
         for (int j = 0; j < cols; j++)
         {
             bufer[j] = arr[i][j];
