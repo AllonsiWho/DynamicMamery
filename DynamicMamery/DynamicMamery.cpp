@@ -3,10 +3,21 @@
 #include <iostream>
 #include<Windows.h>
 using namespace std;
-#define tab "\t"\
+using std::cin;
+using std::cout;
+using std::endl;
 
-void FillRand(int arr[], const int n);
+#define tab "\t"
+#define delimiter "\n------------------------------------------\n"
+
+//#define Dynamic_mamory_1
+#define Dynamic_mamory_2
+
+void FillRand(int* arr, const int n,const int minrand,const int maxreand);
 void Print(int* arr, const int n);
+
+void FillRand(int**arr, const int rows, const int cols);
+void Print(int**arr, const int rows, const int cols);
 
 int* push_back(int* arr,int& n, int value);
 int* push_front(int* arr, int& n, int value);
@@ -16,9 +27,25 @@ int* pop_back(int* mas, int& n);
 int* pop_front(int* mas, int& n);
 int* erase(int* mas, int& n, int index);
 bool Proverk_index(int index,int n);
+
+int** pusch_row_back(int** arr, int& rows, const int cols);
+
+int** pusch_row_front(int** arr, int& rows, const int cols);
+int** insert_row(int** arr, int& rows, const int cols, int index);
+int** pop_row_back(int** arr, int& rows, const int cols);
+int** pop_row_front(int** arr, int& rows, const int cols);
+int** erase_row(int** arr, int& rows, const int cols, int index);
+int** alocale(const int rows, const int cols);
+void clear(int** arr, const int rows);
+
+void pusch_col_back(int**, const int rows, int& cols);
 int main()
 {
     setlocale(LC_ALL, "RUS");
+    #ifdef Dynamic_mamory_1
+
+
+
    int n;
     //Динамические массивы 
     //Динамическим называеться массив кол-во эллементов которого может быть заданна переменным значением 
@@ -129,15 +156,89 @@ int main()
     Print(arr, n);
     arr=erase(arr, n, index);
     Print(arr, n);
+    #endif // Dynamic_mamory_1
+    //двумерный динамические массивы
+    //для того что бы объявить двумерный динамический массив нужно объявить указатель на указатель
+    //и сохранить в него адрес в массивы указателей, каждый эллемент массивы указателей будет хранить 
+    //адрес одномерного динамического массива.
+    //эти одномерныйе динамические массивы являються строками двумерного динамического массива
+
+    int rows;//кол-во строк
+    int cols;//кол-во столбцов(кол-во эллементов строки
+    cout << "Введите кол-во строк "; cin >> rows;
+    cout << "Введите кол-во эллементов строки "; cin >> cols;
+    int** arr1 = alocale(rows, cols);
+    
+
+    FillRand(arr1, rows, cols);
+    Print(arr1, rows, cols);
+    cout << delimiter << endl;
+    //для того что быпередать двумерные динамический массив в функцию
+    //достаточно что бы функция принмала указатель на указатель и размер массива
+    //
+    
+    arr1 = pusch_row_back(arr1, rows, cols);
+    Print(arr1, rows, cols);
+    cout << delimiter << endl;
+    arr1 = pusch_row_front(arr1, rows, cols);
+    Print(arr1, rows, cols);
+    cout << delimiter << endl;
+   /* cout << "Введите индекс куда вставить строку " << endl;
+    int index; cin >> index;
+    arr1 = insert_row(arr1, rows, cols,index);
+    Print(arr1, rows, cols);
+    cout <<"back" delimiter << endl;
+    arr1=pop_row_back(arr1, rows, cols);
+    
+    Print(arr1, rows, cols);
+    cout <<"front" <<delimiter << endl;
+    arr1 = pop_row_front(arr1, rows, cols);
+    FillRand(arr1[rows-1],  cols,900,1000);
+    Print(arr1, rows, cols);
+    cout << "erease" << delimiter << endl;
+    cout << "Введите индекс какую строку удалить строку " << endl;
+     cin >> index;
+    arr1 = erase_row(arr1, rows, cols,index);
+    Print(arr1, rows, cols);*/
+    cout <<"pusch cool" delimiter << endl;
+    pusch_col_back(arr1, rows, cols);
+    Print(arr1, rows, cols);
+
+
+    clear(arr1, rows);
+    
 }
 
-void FillRand(int arr[], const int n)
+void FillRand(int* arr, const int n, const int minrand, const int maxreand)
 {
     cout << typeid(arr).name() << endl;
 
     for (int i = 0; i < n; i++)
     {
-        *(arr + i) = rand() % 100;
+        *(arr + i) = rand() % (maxreand-minrand)+minrand;
+    }
+}
+void FillRand(int**arr, const int rows, const int cols)
+{
+    for (int i = 0; i < rows; i++)//i нумироет строки
+    {
+        for (int j = 0; j < cols; j++)//j нумирует эллементы строки
+        {
+            arr[i][j] = rand() % 100;
+        }
+
+    }
+}
+void Print(int**arr, const int rows, const int cols)
+{
+    for (int i = 0; i < rows; i++)//i нумироет строки
+    {
+        for (int j = 0; j < cols; j++)//j нумирует эллементы строки
+        {
+            cout << arr[i][j] << tab;
+        }
+        cout << endl;
+
     }
 }
 void Print(int arr[], const int n)
@@ -262,4 +363,150 @@ bool Proverk_index(int index,int n)
     return true;
     
     
+}
+
+int** pusch_row_back(int** arr,  int& rows, const int cols)
+{
+
+    int** bufer = new int* [rows + 1];
+    for (int i = 0; i < rows; i++)
+    {
+
+        bufer[i] = arr[i];
+    }
+    delete[]arr;
+    arr = bufer;
+    bufer[rows] = new int[cols] {};
+    rows++;
+    return arr;
+}
+int** pusch_row_front(int** arr, int& rows, const int cols)
+{
+    int** bufer = new int* [rows + 1];
+
+    for (int i = 0; i < rows; i++)
+    {
+        bufer[i+1] = arr[i];
+    }
+    delete[]arr;
+    arr = bufer;
+    bufer[0] = new int[cols] {};
+    rows++;
+    return arr;
+
+}
+int** insert_row(int** arr, int& rows, const int cols,int index)
+{
+    int** bufer = new int* [rows + 1];
+    for (int i = 0, k = 0; i < rows; i++, k++)
+    {
+        if (i == index && i == k)
+        {
+            i--;
+            continue;
+        }
+        bufer[k] = arr[i];
+    }
+    
+    delete[]arr;
+    arr = bufer;
+    bufer[index] = new int[cols] {};
+    rows++;
+    return arr;
+}
+int** pop_row_back(int** arr, int& rows, const int cols)
+{
+    
+    int** bufer = new int* [rows-1];
+    for (int i = 0; i < rows-1; i++)
+    {
+        bufer[i] = arr[i];
+    }
+    delete[]arr[rows-1];
+    delete[]arr;
+    arr = bufer;
+    rows--;
+
+    return arr;
+}
+int** pop_row_front(int** arr, int& rows, const int cols)
+{
+    int** bufer = new int* [rows - 1];
+    for (int i = 1; i < rows; i++)
+    {
+        bufer[i-1] = arr[i];
+
+    }
+    delete[]arr[0];
+    delete[]arr;
+    arr = bufer;
+    rows--;
+    return arr;
+
+
+
+}
+int** erase_row(int** arr, int& rows, const int cols, int index)
+{
+    int** bufer = new int* [rows - 1];
+    for (int i = 0,kol=0; i < rows; i++)
+    {
+
+        if (i == index)
+        {
+            kol = 1;
+            continue;
+        }
+        if (kol == 1)
+        {
+            bufer[i - 1] = arr[i];
+        }
+        else
+        {
+            bufer[i] = arr[i];
+        }
+
+    }
+
+    delete[]arr[index];
+    delete[]arr;
+    arr = bufer;
+    rows--;
+    return arr;
+
+
+}
+int** alocale(const int rows, const int cols)
+{
+    int** arr1 = new int* [rows];
+    for (int i = 0; i < rows; i++)
+    {
+        //создаем строки двумерного массива:
+        arr1[i] = new int[cols];
+    }
+    return arr1;
+}
+void clear(int** arr,const int rows)
+{
+    //1)сначало удаляем стороки
+    for (int i = 0; i < rows; i++)
+    {
+        delete[]arr[i];
+    }
+    delete[]arr;//2)потом удаляем сам массив
+}
+
+void pusch_col_back(int**arr, const int rows, int& cols)
+{
+    for (int i = 0; i < rows; i++)
+    {
+        int* bufer = new int[cols + 1]{};
+        for (int j = 0; j < cols; j++)
+        {
+            bufer[j] = arr[i][j];
+        }
+        delete[]arr[i]; 
+        arr[i] = bufer;
+    }
+    cols++;
 }
